@@ -43,12 +43,14 @@ class HttpServer
         $kernel = $this->kernel;
 
         $http->on('request', function ($request, $response) use($kernel) {
+            $_SERVER = array_change_key_case($request->server);
             $l_request= new Symfony\Component\HttpFoundation\Request(
                 isset($request->get)?$request->get:[],
                 isset($request->post)? $request->post:[], [],
                 isset($request->cookie)?$request->cookie:[],
                 isset($request->files)? $request->files:[],
-                $request->server
+                $_SERVER,
+                $request->rawContent()
             );
 
             if (0 === strpos($l_request->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
