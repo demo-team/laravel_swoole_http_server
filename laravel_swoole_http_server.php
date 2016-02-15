@@ -43,12 +43,13 @@ class HttpServer
         $kernel = $this->kernel;
 
         $http->on('request', function ($request, $response) use($kernel) {
-            $_SERVER = array_change_key_case($request->server);
+            $_SERVER = array_change_key_case($request->server, CASE_UPPER);
             $l_request= new Symfony\Component\HttpFoundation\Request(
-                isset($request->get)?$request->get:[],
-                isset($request->post)? $request->post:[], [],
-                isset($request->cookie)?$request->cookie:[],
-                isset($request->files)? $request->files:[],
+                isset($request->get) ? $request->get : [],
+                isset($request->post) ? $request->post : [],
+                [],
+                isset($request->cookie) ? $request->cookie : [],
+                isset($request->files) ? $request->files : [],
                 $_SERVER,
                 $request->rawContent()
             );
@@ -57,13 +58,13 @@ class HttpServer
                 && in_array(strtoupper($l_request->server->get('REQUEST_METHOD', 'GET')), array('PUT', 'DELETE', 'PATCH'))
             ) {
                 parse_str($l_request->getContent(), $data);
-                $l_request->request = new  Symfony\Component\HttpFoundation\ParameterBag($data);
+                $l_request->request = new Symfony\Component\HttpFoundation\ParameterBag($data);
             }
             Illuminate\Http\Request::enableHttpMethodParameterOverride();
-            $l_request=Illuminate\Http\Request::createFromBase( $l_request);
+            $l_request=Illuminate\Http\Request::createFromBase($l_request);
 
 
-            $l_response = $kernel->handle( $l_request );
+            $l_response = $kernel->handle($l_request);
 
             ob_start();
 
