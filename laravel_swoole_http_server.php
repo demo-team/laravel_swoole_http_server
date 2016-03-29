@@ -32,8 +32,8 @@ class HttpServer
 
     public function onWorkerStart()
     {
-        require __DIR__.'/bootstrap/autoload.php';
-        $this->application = require_once __DIR__.'/bootstrap/app.php';
+        require __DIR__.'/../bootstrap/autoload.php';
+        $this->application = require_once __DIR__.'/../bootstrap/app.php';
         $this->kernel = $this->application->make(Illuminate\Contracts\Http\Kernel::class);
     }
 
